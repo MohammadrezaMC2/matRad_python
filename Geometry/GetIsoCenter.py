@@ -22,7 +22,7 @@ def get_iso_center(cst, ct, visBool=False):
 
     # Determine if the 6th column (index 5) contains no object or constraints
     if cst.shape[1] >= 6:
-        no_obj_or_const = all(elem is None or elem == '' for elem in cst[:, 5])
+        no_obj_or_const = all(elem is None or elem is '' for elem in cst[:, 5])
     else:
         no_obj_or_const = True
 
