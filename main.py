@@ -2,6 +2,7 @@ import numpy as np
 from Data import PLN
 from Data import ReadMatFiles
 from Geometry import GetIsoCenter
+import GenerateStf
 
 mat_file_name = "Data/TG119.mat"
 mat_data = ReadMatFiles.read_mat_file(mat_file_name=mat_file_name)
@@ -54,4 +55,21 @@ pln = PLN.Pln(
 
 pln.prop_stf.num_of_beams = len(pln.prop_stf.gantry_angles)
 
-pln.prop_stf.iso_center = GetIsoCenter.get_iso_center(cst, ct, visBool=True)
+pln.prop_stf.iso_center = GetIsoCenter.get_iso_center(cst, ct, visBool=False)
+
+stf = GenerateStf.generate_stf(ct,cst,pln)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
