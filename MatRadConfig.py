@@ -3,6 +3,7 @@ from Data import DEFAULTS
 from pathlib import Path
 
 
+
 class MatradConfig:
     """
     Class to manage configuration settings for MatRad.
@@ -10,38 +11,38 @@ class MatradConfig:
     """
 
     # Default configuration settings
-    log_level = 4
-    keep_log = False
-    write_log = False
-    defaults = None
+    log_level = 4  # Logging level (higher values indicate more detailed logs)
+    keep_log = False  # Flag to keep log files
+    write_log = False  # Flag to enable writing logs
+    defaults = None  # Placeholder for default configurations
 
     # GUI and mode flags
-    disable_gui = False
-    sampling_scenarios = None
-    dev_mode = False
-    edu_mode = False
+    disable_gui = False  # Determines whether GUI is disabled
+    sampling_scenarios = None  # Number of scenarios for sampling
+    dev_mode = False  # Development mode flag
+    edu_mode = False  # Educational mode flag
 
     # Internal properties for configuration
-    _prop_dose_calc = None
-    _prop_opt = None
-    _prop_stf = None
-    _message_log = []
-    _evn = None
-    _is_octave = None
-    _is_matlab = None
-    _mat_rad_version = None
-    _mat_rad_src_root = None
-    _primary_user_folder = None
-    _example_folder = None
-    _third_party_folder = None
-    _mat_rad_root = None
+    _prop_dose_calc = None  # Dose calculation properties
+    _prop_opt = None  # Optimization properties
+    _prop_stf = None  # Spot-Time Factor (STF) properties
+    _message_log = []  # Message log storage
+    _evn = None  # Environment settings
+    _is_octave = None  # Flag for Octave compatibility
+    _is_matlab = None  # Flag for MATLAB compatibility
+    _mat_rad_version = None  # Version of MatRad
+    _mat_rad_src_root = None  # Source root directory for MatRad
+    _primary_user_folder = None  # Primary user folder
+    _example_folder = None  # Example folder path
+    _third_party_folder = None  # Third-party folder path
+    _mat_rad_root = None  # Root directory for MatRad
 
     def __init__(self):
         """
         Initialize the MatradConfig instance and set up default configuration.
         """
-        self._mat_rad_root = Path(__file__).resolve().parent.parent
-        self.set_defaults()
+        self._mat_rad_root = Path(__file__).resolve().parent.parent  # Set MatRad root directory
+        self.set_defaults()  # Apply default settings
 
     def set_defaults(self):
         """
@@ -49,65 +50,88 @@ class MatradConfig:
         These include machine settings, bio model configurations,
         dose calculation properties, and optimization parameters.
         """
-        self.defaults = DEFAULTS.Defaults
 
         # Machine configuration defaults
-        self.defaults.machine.photons = 'Generic'
-        self.defaults.machine.protons = 'Generic'
-        self.defaults.machine.helium = 'Generic'
-        self.defaults.machine.carbon = 'Generic'
-        self.defaults.machine.brachy = 'HDR'
-        self.defaults.machine.fall_back = 'Generic'
+        machine = DEFAULTS.Machine(
+            photons='Generic',
+            protons='Generic',
+            helium='Generic',
+            carbon='Generic',
+            brachy='HDR',
+            fall_back='Generic'
+        )
 
         # Bio model configuration defaults
-        self.defaults.bio_model.photons = 'none'
-        self.defaults.bio_model.protons = 'constRBE'
-        self.defaults.bio_model.helium = 'HEL'
-        self.defaults.bio_model.carbon = 'LEM'
-        self.defaults.bio_model.brachy = 'none'
-        self.defaults.bio_model.fall_back = 'none'
+        bio_model = DEFAULTS.BioModel(
+            photons='none',
+            protons='constRBE',
+            helium='HEL',
+            carbon='LEM',
+            brachy='none',
+            fall_back='none'
+        )
 
         # STF (Spot-Time Factor) properties
-        self.defaults.prop_stf.generator = ('PhotonIMRT', 'ParticleIMPT', 'SimpleBrachy')
-        self.defaults.prop_stf.longitudinal_spot_spacing = 2
-        self.defaults.prop_stf.add_margin = True
-        self.defaults.prop_stf.bixel_width = 5
+        prop_stf = DEFAULTS.PropStf(
+            generator=('PhotonIMRT', 'ParticleIMPT', 'SimpleBrachy'),
+            longitudinal_spot_spacing=2,
+            add_margin=True,
+            bixel_width=5
+        )
 
         # Dose calculation properties
-        self.defaults.prop_dose_calc.engine = ('SVDPB', 'HongPB')
-        self.defaults.prop_dose_calc.dose_grid = {'x': 3, 'y': 3, 'z': 3}
-        self.defaults.prop_dose_calc.dosimetric_lateral_cutOff = 0.995
-        self.defaults.prop_dose_calc.geometric_lateral_cutOff = 50
-        self.defaults.prop_dose_calc.kernel_cutOff = INFINITE
-        self.defaults.prop_dose_calc.ssd_density_threshold = 0.05
-        self.defaults.prop_dose_calc.use_given_EqDensity_cube = False
-        self.defaults.prop_dose_calc.use_custom_primary_photon_fluence = False
-        self.defaults.prop_dose_calc.calc_let = False
-        self.defaults.prop_dose_calc.select_voxel_is_in_scenarios = 'all'
-        self.defaults.prop_dose_calc.air_off_set_correction = True
-        self.defaults.prop_dose_calc.fine_sampling.sigma_sub = 1
-        self.defaults.prop_dose_calc.fine_sampling.N = 2
-        self.defaults.prop_dose_calc.fine_sampling.method = 'fitCircle'
-
-        # Monte Carlo dose calculation settings
-        self.defaults.prop_dose_calc.num_histories_ = 1E6
-        self.defaults.prop_dose_calc.num_histories_per_beamlet = 2E4
-        self.defaults.prop_dose_calc.output_MCvariance = True
+        fine_sampling = DEFAULTS.FineSampling(
+            sigma_sub=1,
+            N=2,
+            method='fitCircle'
+        )
+        dose_grid = DEFAULTS.DoseGrid(
+            resolution={'x': 3, 'y': 3, 'z': 3}
+        )
+        prop_dose_calc = DEFAULTS.PropDoseCalc(
+            engine=('SVDPB', 'HongPB'),
+            dose_grid=dose_grid,
+            dosimetric_lateral_cutOff=0.995,
+            geometric_lateral_cutOff=50,
+            kernel_cutOff=INFINITE,
+            ssd_density_threshold=0.05,
+            use_given_eq_densities=False,
+            use_custom_primary_photon_fluence=False,
+            calc_let=False,
+            select_voxel_is_in_scenarios='all',
+            air_off_set_correction=True,
+            fine_sampling=fine_sampling,
+            num_histories_direct=1E6,
+            num_histories_per_beamlet=2E4,
+            output_MCvariance=True
+        )
 
         # Optimization properties
-        self.defaults.prop_opt.optimizer = 'IPOPT'
-        self.defaults.prop_opt.max_iter = 500
-        self.defaults.prop_opt.run_dao = 0
-        self.defaults.prop_opt.clear_unused_voxels = False
+        prop_opt = DEFAULTS.PropOpt(
+            optimizer='IPOPT',
+            max_iter=500,
+            run_dao=0,
+            clear_unused_voxels=False
+        )
 
         # Sequencing properties
-        self.defaults.prop_seq.sequencer = 'siochi'
+        prop_seq = DEFAULTS.PropSeq(
+            sequencer='siochi'
+        )
 
         # Global settings for GUI, sampling, and modes
-        self.disable_gui = False
-        self.defaults.sampling_scenarios = 25
-        self.dev_mode = False
-        self.edu_mode = False
+        self.defaults = DEFAULTS.Defaults(
+            machine=machine,
+            bio_model=bio_model,
+            prop_stf=prop_stf,
+            prop_dose_calc=prop_dose_calc,
+            prop_opt=prop_opt,
+            prop_seq=prop_seq,
+            sampling_scenarios=25
+        )
+        self.disable_gui = False  # Enable GUI
+        self.dev_mode = False  # Disable development mode
+        self.edu_mode = False  # Disable educational mode
 
     def set_default_properties_for_testing(self):
         """
@@ -117,7 +141,7 @@ class MatradConfig:
         self.set_defaults()
 
         # Set testing-specific values
-        self.log_level = 1
+        self.log_level = 1  # Reduced log level for testing
 
         # STF settings for testing
         self.defaults.prop_stf.longitudinal_spot_spacing = 20
@@ -135,6 +159,6 @@ class MatradConfig:
 
         # Adjust sampling scenarios for testing
         self.defaults.sampling_scenarios = 2
-        self.disable_gui = True
-        self.dev_mode = True
-        self.edu_mode = False
+        self.disable_gui = True  # Disable GUI for testing
+        self.dev_mode = True  # Enable development mode
+        self.edu_mode = False  # Keep educational mode disabled

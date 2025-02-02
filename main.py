@@ -1,5 +1,6 @@
 import numpy as np
 from Data import PLN
+from MatRadConfig import MatradConfig
 from Data import ReadMatFiles
 from Geometry import GetIsoCenter
 import GenerateStf
@@ -56,6 +57,11 @@ pln = PLN.Pln(
 pln.prop_stf.num_of_beams = len(pln.prop_stf.gantry_angles)
 
 pln.prop_stf.iso_center = GetIsoCenter.get_iso_center(cst, ct, visBool=False)
+
+matrad_confg = MatradConfig()
+print(matrad_confg.defaults.machine.brachy)
+
+
 
 stf = GenerateStf.generate_stf(ct,cst,pln)
 

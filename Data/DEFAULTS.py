@@ -23,8 +23,8 @@ class BioModel:
 class PropStf:
     longitudinal_spot_spacing: int
     add_margin: bool
-    bixel_width = int
-    generator: Tuple[float, float, float] = field(default_factory=tuple)
+    bixel_width: int
+    generator: Tuple[str, str, str] = field(default_factory=tuple)
 
 @dataclass
 class DoseGrid:
@@ -38,9 +38,9 @@ class FineSampling:
 @dataclass
 class PropDoseCalc:
     geometric_lateral_cutOff: int
-    dosimetric_lateral_cutOff: int
+    dosimetric_lateral_cutOff: float
     kernel_cutOff: int
-    ssd_density_threshold: int
+    ssd_density_threshold: float
     use_given_eq_densities: bool
     use_custom_primary_photon_fluence: bool
     calc_let: bool
@@ -50,9 +50,8 @@ class PropDoseCalc:
     num_histories_direct: float
     output_MCvariance: bool
     dose_grid: DoseGrid
-    use_given_EqDensity_cube: bool
+    use_given_eq_densities: bool
     num_histories_per_beamlet: float
-    sampling_scenarios: int
     engine: Tuple[str, str] = field(default_factory=tuple)
 
 @dataclass
@@ -69,6 +68,7 @@ class PropSeq:
 
 @dataclass
 class Defaults:
+    sampling_scenarios: int
     machine: Machine
     bio_model: BioModel
     prop_stf: PropStf
